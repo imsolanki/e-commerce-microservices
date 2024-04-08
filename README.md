@@ -45,6 +45,7 @@ Welcome to Mini-Amazon, a miniature replica of Amazon built using event-driven a
 - `product-service`: Manages product catalog and details.
 - `email-service`: Sends email notifications to customers.
 - `gateway-service`: Acts as an API gateway for external client communication.
+- `service-registry`: Acts as an registry for API gateway purpose using sping provided Eureka Server.
 
 ## Technologies Used
 
