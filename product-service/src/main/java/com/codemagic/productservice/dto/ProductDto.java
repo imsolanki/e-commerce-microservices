@@ -1,6 +1,7 @@
 package com.codemagic.productservice.dto;
 
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,6 +20,6 @@ public class ProductDto {
     @NotEmpty
     @Size(min=4,message = "Product must have at least 10 characters")
     private String description;
-    @NotEmpty
+    @NotNull
     private double price;
 }
