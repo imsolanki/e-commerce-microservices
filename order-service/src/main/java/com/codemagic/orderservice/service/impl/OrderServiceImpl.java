@@ -7,6 +7,7 @@ import com.codemagic.orderservice.exception.ResourceNotFoundException;
 import com.codemagic.orderservice.repository.OrderRepository;
 import com.codemagic.orderservice.service.APIClient;
 import com.codemagic.orderservice.service.OrderService;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,6 +40,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @CircuitBreaker(name="${spring.application.name}",fallbackMethod = "getDefaultInventory")
     public OrderDto createOrder(OrderDto orderDto) {
 
         ResponseEntity<Boolean> input = apiClient.isPresent(orderDto.getProductName());
@@ -66,6 +68,16 @@ public class OrderServiceImpl implements OrderService {
             //return null;
             throw new ResourceNotFoundException(orderDto.getProductName(), orderDto.getOrderId(), "price");
         }
+    }
+
+    public OrderDto getDefaultInventory(OrderDto orderDto, Exception e) {
+        return new OrderDto(
+                orderDto.getOrderId(),
+                orderDto.getProductName(),
+                orderDto.getQty(),
+                orderDto.getPrice()
+        );
+
     }
     private void sendMessage(OrderEvent orderEvent){
         LOGGER.info(String.format("Order Event -> %s",orderEvent.toString()));
